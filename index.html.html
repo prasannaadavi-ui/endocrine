@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Endocrine System Quiz — Science Olympiad</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0f1117;color:#e8eaf6;font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding:1.5rem 1rem}
+  .wrap{max-width:580px;margin:0 auto}
+  .label{font-size:11px;letter-spacing:2px;color:#555a80;text-transform:uppercase;margin-bottom:6px}
+  h1{font-size:24px;font-weight:600;margin-bottom:4px;background:linear-gradient(90deg,#AFA9EC,#EF9F27);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .subtitle{font-size:14px;color:#8b90b8}
+  .cat-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;margin-bottom:10px}
+  .cat-accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
+  .cat-icon{font-size:20px}
+  .cat-name{font-size:14px;font-weight:500;color:#e8eaf6}
+  .cat-count{font-size:12px;color:#8b90b8;margin-top:2px}
+  .checkbox{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+  .start-btn{width:100%;padding:12px;font-size:15px;font-weight:600;background:linear-gradient(135deg,#534AB7,#EF9F27);border:none;color:#fff;border-radius:12px;cursor:pointer;letter-spacing:.3px;font-family:inherit}
+  .meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;font-size:13px}
+  .progress-bar{height:5px;background:#1a1d27;border-radius:4px;margin-bottom:1.25rem;overflow:hidden;border:1px solid #2e3350}
+  .progress-fill{height:100%;border-radius:4px;transition:width .3s ease}
+  .q-card{background:#1a1d27;border-radius:14px;border:1px solid #2e3350;padding:1.25rem;margin-bottom:1rem}
+  .q-meta{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+  .q-cat-label{font-size:12px;font-weight:500;letter-spacing:.5px}
+  .tf-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+  .q-text{font-size:16px;font-weight:500;color:#e8eaf6;line-height:1.55}
+  .opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;cursor:pointer;transition:all .15s;margin-bottom:8px;border:1px solid #2e3350;background:#1a1d27}
+  .opt-label{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;transition:all .15s;border:1px solid #2e3350;color:#555a80;background:transparent}
+  .opt-text{font-size:14px;color:#e8eaf6;line-height:1.4}
+  .feedback{padding:12px 16px;border-radius:10px;margin-bottom:10px;font-size:14px;font-weight:500}
+  .exp-card{background:#1a1d27;border-radius:10px;padding:14px 16px;margin-bottom:1rem}
+  .exp-header{font-size:13px;font-weight:600;margin-bottom:8px}
+  .exp-text{font-size:13px;color:#8b90b8;line-height:1.65}
+  .spinner{width:16px;height:16px;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .nav{display:flex;gap:8px}
+  .nav-btn{flex:1;padding:10px;font-size:14px;cursor:pointer;border-radius:10px;border:1px solid #2e3350;background:#1a1d27;color:#e8eaf6;font-family:inherit;transition:all .15s}
+  .nav-btn:disabled{opacity:.3;cursor:not-allowed}
+  .nav-next{flex:2;font-weight:600;border:none;color:#fff}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.5rem}
+  .stat-card{background:#1a1d27;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid #2e3350}
+  .stat-label{font-size:11px;color:#555a80;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+  .stat-val{font-size:22px;font-weight:700}
+  .result-list{background:#1a1d27;border-radius:12px;border:1px solid #2e3350;overflow:hidden;margin-bottom:1.5rem}
+  .result-item{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #2e3350;align-items:flex-start}
+  .result-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;font-weight:700}
+  .result-cat{font-size:12px;font-weight:500;margin-bottom:2px}
+  .result-q{font-size:13px;color:#e8eaf6;line-height:1.4;margin-bottom:3px}
+  .result-wrong{font-size:12px;color:#D4537E}
+  .result-right{font-size:12px;color:#1D9E75}
+  /* API key screen */
+  .key-card{background:#1a1d27;border:1px solid #2e3350;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+  .key-card p{font-size:14px;color:#8b90b8;line-height:1.6;margin-bottom:1rem}
+  .key-input{width:100%;padding:10px 14px;font-size:14px;background:#0f1117;border:1px solid #2e3350;border-radius:10px;color:#e8eaf6;font-family:monospace;margin-bottom:10px;outline:none}
+  .key-input:focus{border-color:#7F77DD}
+  .key-btn{width:100%;padding:11px;font-size:14px;font-weight:600;background:linear-gradient(135deg,#534AB7,#EF9F27);border:none;color:#fff;border-radius:10px;cursor:pointer;font-family:inherit}
+  .key-note{font-size:12px;color:#555a80;margin-top:8px;text-align:center}
+  a{color:#7F77DD}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const MC=[
+  {id:46,q:"Which hormone acts primarily through intracellular or nuclear receptors?",opts:["Insulin","PTH","Cortisol","TSH"],ans:2,cat:"Hormones & Receptors"},
+  {id:47,q:"Which endocrine organ stores hormone precursor in extracellular colloid?",opts:["Adrenal cortex","Thyroid gland","Pancreas","Pituitary gland"],ans:1,cat:"Hormones & Receptors"},
+  {id:51,q:"An active steroid hormone-receptor complex acting as a transcription factor would most likely be found in the:",opts:["Cell membrane","Nucleus","Lysosome","Golgi apparatus"],ans:1,cat:"Hormones & Receptors"},
+  {id:52,q:"Which pairing is correct?",opts:["Steroid hormones — membrane receptors — very rapid","Peptide hormones — intracellular receptors — very slow","Steroid hormones — intracellular receptors — generally slower","Peptide hormones — stored in colloid"],ans:2,cat:"Hormones & Receptors"},
+  {id:53,q:"Hormone X binds cytoplasmic receptors and changes transcription. Hormone Y activates a GPCR and cAMP signaling. Which classification is correct?",opts:["X peptide, Y steroid","X steroid, Y peptide","X amine, Y steroid","X steroid, Y amine"],ans:1,cat:"Hormones & Receptors"},
+  {id:54,q:"Which hormone pair best shows that chemical class does not always predict receptor location?",opts:["Cortisol and aldosterone","Growth hormone and prolactin","Thyroxine and epinephrine","Insulin and glucagon"],ans:2,cat:"Hormones & Receptors"},
+  {id:55,q:"Which statement about T3 and T4 is correct?",opts:["T3 has a shorter half-life than T4","T4 is always more active than T3","T3 is stored only in the pituitary","T4 cannot circulate in blood"],ans:0,cat:"Hormones & Receptors"},
+  {id:56,q:"Which statement correctly compares the pituitary lobes?",opts:["Posterior pituitary produces GH and prolactin","Anterior pituitary stores oxytocin and ADH","Anterior pituitary produces hormones such as GH and prolactin, while posterior pituitary stores and releases oxytocin and ADH","Both lobes secrete identical hormones"],ans:2,cat:"Hormones & Receptors"},
+  {id:50,q:"ADH increases water reabsorption mainly in the:",opts:["Bowman's capsule","Collecting ducts","Loop of Henle only","Glomerulus"],ans:1,cat:"Fluid & Electrolytes"},
+  {id:49,q:"When blood pressure falls, which kidney-associated cells help initiate hormone responses that conserve salt and water?",opts:["Podocytes","Juxtaglomerular cells","Red blood cells","Thyroid follicular cells"],ans:1,cat:"Fluid & Electrolytes"},
+  {id:61,q:"Loss of aldosterone tends to cause:",opts:["Hypertension and low potassium","Low blood pressure and high potassium","Hypercalcemia","Excess thyroid hormone"],ans:1,cat:"Fluid & Electrolytes"},
+  {id:62,q:"Low levels of which hormone would most directly cause low blood pressure and high serum potassium?",opts:["Cortisol","Epinephrine","Aldosterone","Thyroxine"],ans:2,cat:"Fluid & Electrolytes"},
+  {id:63,q:"Parathyroid hormone acts overall to:",opts:["Lower blood calcium","Raise blood calcium","Lower blood glucose","Raise blood sodium only"],ans:1,cat:"Fluid & Electrolytes"},
+  {id:64,q:"Primary hyperparathyroidism is more likely than secondary hyperparathyroidism to show:",opts:["Elevated serum calcium","Very low PTH","Zero calcitonin","Low urine output only"],ans:0,cat:"Fluid & Electrolytes"},
+  {id:48,q:"A patient with low cortisol, high ACTH, salt craving, and hyperpigmentation most likely has:",opts:["Cushing's syndrome","Addison's disease","Conn's syndrome","Diabetes insipidus"],ans:1,cat:"Disorders"},
+  {id:57,q:"Severe iodine deficiency can impair neurodevelopment mainly because it reduces:",opts:["Insulin secretion","Thyroid hormone production","PTH release","ADH receptor number"],ans:1,cat:"Disorders"},
+  {id:58,q:"A pituitary tumor that overproduces ACTH would most directly increase:",opts:["Aldosterone only","Cortisol secretion","Thyroid hormone release only","ADH release only"],ans:1,cat:"Disorders"},
+  {id:59,q:"Which disorder is associated with chronically excessive cortisol activity?",opts:["Addison's disease","Cushing's syndrome","Diabetes insipidus","Hashimoto's thyroiditis"],ans:1,cat:"Disorders"},
+  {id:60,q:"Why do some Addison's disease patients develop hyperpigmentation?",opts:["Low insulin","High ACTH associated with adrenal failure","High calcium","Low ADH"],ans:1,cat:"Disorders"},
+  {id:65,q:"A patient with low TSH, high T3/T4, and positive TSH-receptor antibodies most likely has:",opts:["Hashimoto's thyroiditis","Graves' disease","Diabetes insipidus","Addison's disease"],ans:1,cat:"Disorders"},
+  {id:66,q:"Which finding best distinguishes Hashimoto's thyroiditis from simple iodine deficiency?",opts:["Goiter","Fatigue","Cold intolerance","Circulating thyroid autoantibodies"],ans:3,cat:"Disorders"},
+  {id:67,q:"Which finding best distinguishes central from nephrogenic diabetes insipidus?",opts:["High plasma osmolarity","Low urine osmolarity","Low circulating ADH levels","High blood glucose"],ans:2,cat:"Disorders"},
+  {id:68,q:"Addison's disease may remain subclinical until infection or another stressor because:",opts:["Viruses directly destroy the adrenal glands overnight","Autoimmune adrenal destruction can progress slowly until stress raises cortisol demand beyond reserve capacity","The thyroid compensates fully until late disease","ACTH is absent in early disease"],ans:1,cat:"Disorders"},
+  {id:105,q:"Why do some Addison's disease patients develop hyperpigmentation?",opts:["Low insulin","High ACTH associated with adrenal failure","High calcium","Low thyroid hormone"],ans:1,cat:"Disorders"},
+  {id:113,q:"Which disorder is associated with chronically excessive cortisol activity? (Review)",opts:["Addison's disease","Cushing's syndrome","Diabetes insipidus","Hashimoto's thyroiditis"],ans:1,cat:"Disorders"},
+];
+const TF=[
+  {id:99,q:"When blood pressure falls, the body releases hormones that help conserve salt and water.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:100,q:"ADH increases water reabsorption in the kidney collecting ducts.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:106,q:"Loss of aldosterone tends to cause low blood pressure, low sodium, and high potassium.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:107,q:"Parathyroid hormone acts to raise blood calcium levels.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:108,q:"Primary hyperparathyroidism is more likely than secondary hyperparathyroidism to produce elevated blood calcium.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:112,q:"Parathyroid hormone increases blood calcium partly through actions on the kidneys and bones.",ans:true,cat:"Fluid & Electrolytes"},
+  {id:101,q:"Steroid hormones usually act through intracellular receptors rather than cell-surface receptors.",ans:true,cat:"Hormones & Receptors"},
+  {id:102,q:"Not all amine hormones act the same way; some bind cell-surface receptors while others act through intracellular receptors.",ans:true,cat:"Hormones & Receptors"},
+  {id:111,q:"Oxytocin and ADH are released from the posterior pituitary, while most releasing hormones regulate the anterior pituitary.",ans:true,cat:"Hormones & Receptors"},
+  {id:103,q:"Severe iodine deficiency can impair normal growth and nervous-system development by reducing thyroid hormone production.",ans:true,cat:"Disorders"},
+  {id:104,q:"A pituitary tumor that overproduces ACTH would be expected to increase cortisol secretion.",ans:true,cat:"Disorders"},
+  {id:109,q:"Hashimoto's thyroiditis is an autoimmune cause of hypothyroidism.",ans:true,cat:"Disorders"},
+  {id:110,q:"Central diabetes insipidus is caused by too little ADH, while nephrogenic diabetes insipidus results from poor kidney response to ADH.",ans:true,cat:"Disorders"},
+];
+const ALL=[
+  ...MC.map(q=>({...q,type:"mc"})),
+  ...TF.map(q=>({...q,type:"tf",opts:["True","False"],ans:q.ans?0:1})),
+];
+const CATS={
+  "Hormones & Receptors":{icon:"🔬",color:"#7F77DD",light:"#1e1a3d"},
+  "Fluid & Electrolytes":{icon:"💧",color:"#1D9E75",light:"#0d3d2e"},
+  "Disorders":{icon:"⚕️",color:"#EF9F27",light:"#3d2a00"},
+};
+const LETTERS=["A","B","C","D"];
+
+let apiKey="";
+let selectedCats=new Set(Object.keys(CATS));
+let mode="key"; // key | menu | quiz | results
+let quizQs=[], current=0, chosen={}, revealed={}, explanations={}, loadingExp={};
+
+function catCount(c){return ALL.filter(q=>q.cat===c).length;}
+function totalSelected(){return [...selectedCats].reduce((s,c)=>s+catCount(c),0);}
+
+async function getExplanation(q){
+  loadingExp[current]=true; render();
+  try{
+    const r=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are a Science Olympiad Anatomy & Physiology tutor.\n\nQuestion: "${q.q}"\nCorrect answer: "${q.opts[q.ans]}"\nTopic: ${q.cat}\n\nGive a concise explanation (3-5 sentences, 6th-grade accessible but competition-level depth) of WHY this is the correct answer. Briefly mention why common wrong answers are incorrect if helpful. No bullet points — flowing prose only.`}]
+      })
+    });
+    const d=await r.json();
+    explanations[current]=d.content?.[0]?.text||"Explanation unavailable.";
+  }catch(e){
+    explanations[current]="Could not load explanation. Check your API key.";
+  }
+  loadingExp[current]=false; render();
+}
+
+function startQuiz(){
+  const pool=ALL.filter(q=>selectedCats.has(q.cat));
+  quizQs=[...pool].sort(()=>Math.random()-.5);
+  chosen={};revealed={};current=0;explanations={};loadingExp={};
+  mode="quiz"; render();
+}
+
+function pick(i){
+  if(revealed[current])return;
+  chosen[current]=i; revealed[current]=true;
+  getExplanation(quizQs[current]);
+  render();
+}
+
+function score(){return quizQs.filter((q,i)=>chosen[i]===q.ans).length;}
+
+function render(){
+  const app=document.getElementById("app");
+  if(mode==="key"){app.innerHTML=renderKey();return;}
+  if(mode==="menu"){app.innerHTML=renderMenu();return;}
+  if(mode==="results"){app.innerHTML=renderResults();return;}
+  app.innerHTML=renderQuiz();
+}
+
+function renderKey(){
+  return`<div style="margin-bottom:1.5rem">
+    <div class="label">Science Olympiad — Anatomy &amp; Physiology</div>
+    <h1>Endocrine System Quiz</h1>
+    <p class="subtitle" style="margin-top:4px">Enter your Anthropic API key to enable AI explanations</p>
+  </div>
+  <div class="key-card">
+    <p>This quiz uses the Claude API to generate explanations after each answer. Your key is stored only in memory for this session — it is never saved or sent anywhere except directly to Anthropic.</p>
+    <input class="key-input" id="keyInput" type="password" placeholder="sk-ant-api03-..." value="${apiKey}"/>
+    <button class="key-btn" onclick="submitKey()">Continue →</button>
+    <p class="key-note">Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</p>
+  </div>`;
+}
+
+function submitKey(){
+  const v=document.getElementById("keyInput").value.trim();
+  if(!v){alert("Please enter an API key.");return;}
+  apiKey=v; mode="menu"; render();
+}
+
+function renderMenu(){
+  const cats=Object.entries(CATS).map(([cat,meta])=>{
+    const sel=selectedCats.has(cat);
+    const chk=sel?`<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`:"";
+    return`<div class="cat-card" onclick="toggleCat('${cat}')" style="border:1px solid ${sel?meta.color+"88":"#2e3350"};background:${sel?meta.light:"#1a1d27"}">
+      ${sel?`<div class="cat-accent" style="background:${meta.color}"></div>`:""}
+      <span class="cat-icon">${meta.icon}</span>
+      <div style="flex:1"><div class="cat-name">${cat}</div><div class="cat-count">${catCount(cat)} questions</div></div>
+      <div class="checkbox" style="border:1px solid ${sel?meta.color:"#2e3350"};background:${sel?meta.color:"transparent"}">${chk}</div>
+    </div>`;
+  }).join("");
+  return`<div style="margin-bottom:1.5rem">
+    <div class="label">Science Olympiad — Anatomy &amp; Physiology</div>
+    <h1>Endocrine System Quiz</h1>
+    <p class="subtitle" style="margin-top:4px">Choose your topic areas below</p>
+  </div>
+  ${cats}
+  <div class="meta-row">
+    <span style="color:#8b90b8">${totalSelected()} questions selected</span>
+    <span style="color:#555a80;font-size:12px">AI explanations after each answer</span>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">Start Quiz →</button>`;
+}
+
+function toggleCat(cat){
+  if(selectedCats.has(cat)){if(selectedCats.size>1)selectedCats.delete(cat);}
+  else selectedCats.add(cat);
+  render();
+}
+
+function renderQuiz(){
+  const q=quizQs[current];
+  const isRev=revealed[current];
+  const isCorr=chosen[current]===q.ans;
+  const catColor=CATS[q.cat]?.color||"#7F77DD";
+  const pct=Math.round(((current+(isRev?1:0))/quizQs.length)*100);
+  const isTF=q.type==="tf";
+  const expText=explanations[current];
+  const expLoad=loadingExp[current];
+  const sc=score();
+
+  const opts=q.opts.map((opt,i)=>{
+    let bg="#1a1d27",border="#2e3350",textCol="#e8eaf6",labelBg="transparent",labelCol="#555a80";
+    if(isRev){
+      if(i===q.ans){bg="#0d3d2e";border="#1D9E75";textCol="#5DCAA5";labelBg="#1D9E75";labelCol="#fff";}
+      else if(i===chosen[current]){bg="#3d1228";border="#D4537E";textCol="#ED93B1";labelBg="#D4537E";labelCol="#fff";}
+      else{textCol="#555a80";}
+    }else if(chosen[current]===i){bg="#21253a";border=catColor;labelBg=catColor;labelCol="#fff";}
+    const label=isTF?(i===0?"T":"F"):LETTERS[i];
+    const cursor=isRev?"default":"pointer";
+    return`<div class="opt" onclick="${isRev?"":"pick("+i+")"}" style="background:${bg};border-color:${border};cursor:${cursor}">
+      <div class="opt-label" style="background:${labelBg};border-color:${border};color:${labelCol}">${label}</div>
+      <span class="opt-text" style="color:${textCol}">${opt}</span>
+    </div>`;
+  }).join("");
+
+  let feedback="", expBlock="";
+  if(isRev){
+    const fbBg=isCorr?"#0d3d2e":"#3d1228";
+    const fbBorder=isCorr?"#1D9E75":"#D4537E";
+    const fbCol=isCorr?"#5DCAA5":"#ED93B1";
+    const fbMsg=isCorr?"✓ Correct!":(`✗ Incorrect — correct answer: ${isTF?q.opts[q.ans]:(LETTERS[q.ans]+". "+q.opts[q.ans])}`);
+    feedback=`<div class="feedback" style="background:${fbBg};border:1px solid ${fbBorder};color:${fbCol}">${fbMsg}</div>`;
+
+    if(expLoad){
+      expBlock=`<div class="exp-card" style="border:1px solid ${catColor}44">
+        <div class="exp-header" style="color:${catColor}">✦ AI Explanation</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="spinner" style="border:2px solid ${catColor}44;border-top-color:${catColor}"></div>
+          <span style="font-size:13px;color:#8b90b8">Generating explanation…</span>
+        </div>
+      </div>`;
+    }else if(expText){
+      expBlock=`<div class="exp-card" style="border:1px solid ${catColor}44">
+        <div class="exp-header" style="color:${catColor}">✦ AI Explanation</div>
+        <p class="exp-text">${expText}</p>
+      </div>`;
+    }
+  }
+
+  const canNext=isRev&&!expLoad;
+  const nextLabel=current===quizQs.length-1?"See results →":"Next →";
+  const nextBg=canNext?`linear-gradient(135deg,${catColor}cc,${catColor})`:"transparent";
+  const nextBorder=canNext?"none":"1px solid #2e3350";
+  const nextCol=canNext?"#fff":"#555a80";
+  const nextCursor=canNext?"pointer":"not-allowed";
+
+  const tfBadge=isTF?`<span class="tf-badge" style="background:${catColor}33;color:${catColor}">True / False</span>`:"";
+
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <button class="nav-btn" style="flex:unset;padding:6px 12px;font-size:12px" onclick="mode='menu';render()">← Menu</button>
+    <div style="display:flex;gap:12px;font-size:13px">
+      <span style="color:#8b90b8">Q ${current+1}<span style="color:#555a80">/${quizQs.length}</span></span>
+      <span style="color:#1D9E75;font-weight:500">${sc} correct</span>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:linear-gradient(90deg,${catColor}99,${catColor})"></div></div>
+  <div class="q-card">
+    <div class="q-meta">
+      <span style="font-size:16px">${CATS[q.cat]?.icon}</span>
+      <span class="q-cat-label" style="color:${catColor}">${q.cat}</span>
+      ${tfBadge}
+    </div>
+    <p class="q-text">${q.q}</p>
+  </div>
+  ${opts}
+  ${feedback}${expBlock}
+  <div class="nav">
+    <button class="nav-btn" onclick="if(current>0){current--;render()}" ${current===0?"disabled":""}>← Prev</button>
+    <button class="nav-btn nav-next" onclick="if(${canNext}){if(current<quizQs.length-1){current++;render();}else{mode='results';render();}}" style="background:${nextBg};border:${nextBorder};color:${nextCol};cursor:${nextCursor}" ${canNext?"":"disabled"}>${nextLabel}</button>
+  </div>`;
+}
+
+function renderResults(){
+  const sc=score();
+  const pct=quizQs.length?Math.round((sc/quizQs.length)*100):0;
+  const grade=pct>=90?"Excellent! 🎉":pct>=75?"Great work! ✓":pct>=60?"Keep studying 📖":"Needs review 🔁";
+  const accCol=pct>=75?"#1D9E75":"#D4537E";
+
+  const items=quizQs.map((q,i)=>{
+    const c=chosen[i], correct=c===q.ans, cc=CATS[q.cat]?.color||"#7F77DD";
+    const dotBg=correct?"#0d3d2e":"#3d1228";
+    const dotBorder=correct?"#1D9E75":"#D4537E";
+    const dotCol=correct?"#1D9E75":"#D4537E";
+    const wrong=(!correct&&c!==undefined)?`<div class="result-wrong">Your answer: ${q.opts[c]}</div>`:"";
+    const rightAns=!correct?`<div class="result-right">Correct: ${q.opts[q.ans]}</div>`:"";
+    const tfTag=q.type==="tf"?" · T/F":"";
+    return`<div class="result-item">
+      <div class="result-dot" style="background:${dotBg};border:1px solid ${dotBorder};color:${dotCol}">${correct?"✓":"✗"}</div>
+      <div style="flex:1">
+        <div class="result-cat" style="color:${cc}">${q.cat}${tfTag}</div>
+        <div class="result-q">Q${i+1}. ${q.q}</div>
+        ${wrong}${rightAns}
+      </div>
+    </div>`;
+  }).join("");
+
+  return`<div style="margin-bottom:1.5rem">
+    <button class="nav-btn" style="flex:unset;padding:6px 12px;font-size:13px;margin-bottom:1rem" onclick="mode='menu';render()">← Back to menu</button>
+    <h2 style="font-size:20px;font-weight:600;color:#e8eaf6;margin-bottom:4px">Quiz complete</h2>
+    <p style="font-size:14px;color:#8b90b8">${grade}</p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Correct</div><div class="stat-val" style="color:#7F77DD">${sc}/${quizQs.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Accuracy</div><div class="stat-val" style="color:${accCol}">${pct}%</div></div>
+    <div class="stat-card"><div class="stat-label">Questions</div><div class="stat-val" style="color:#EF9F27">${quizQs.length}</div></div>
+  </div>
+  <div class="result-list">${items}</div>
+  <button class="start-btn" onclick="startQuiz()">Try Again →</button>`;
+}
+
+// handle Enter key on API key input
+document.addEventListener("keydown",e=>{
+  if(mode==="key"&&e.key==="Enter")submitKey();
+});
+
+render();
+</script>
+</body>
+</html>
